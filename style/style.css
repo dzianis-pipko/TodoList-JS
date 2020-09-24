@@ -1,0 +1,145 @@
+* {
+   padding: 0;
+   margin: 0;
+   box-sizing: border-box;
+   font-family: 'Open Sans', sans-serif;
+}
+body {
+   height: 100%;
+   background-color: #333;
+   
+}
+
+.todo-wrapper {
+   margin-top: 80px;
+   margin-bottom: 80px;
+   width: 100%;
+   padding: 0 40px 0 40px;
+   display: flex;
+   justify-content: center;
+   flex-direction: column;
+   align-items: center;
+}
+.todo-title {
+   color: #fff;
+   font-size: 50px;
+   font-weight: 300;
+   margin-top: 10px;
+   margin-bottom: 20px;
+}
+.todo-add {
+   display: flex;
+   width: 100%;
+   margin-bottom: 15px;
+}
+.todo-add__input {
+   width: 100%;
+   outline: none;
+   border: none;
+   border-radius: 30px;
+   background-color: #fff;
+   font-size: 20px;
+   font-weight: 400;
+   color: #333;
+   padding: 10px 30px 10px 30px;
+   border: 1px solid #fff;
+   transition: all .3s ease-out;
+
+}
+.todo-add__input:focus{
+   color: #fff;
+   background-color: #333;
+   border: none;
+   border-radius: 5px;
+   border-bottom: 1px solid #fff;
+   transition: all .3s ease-out;
+}
+.todo-add__button {
+   color: #333;
+   padding: 10px 30px 10px 30px;
+   font-size: 20px;
+   font-weight: 400;
+   background-color: #fff;
+   outline: none;
+   border: none;
+   border-radius: 30px;
+   border: 1px solid #fff;
+   margin-left: 10px;
+   cursor: pointer;
+   transition: all .3s ease-out;
+}
+.todo-add__button:hover {
+   background-color: #333;
+   color: #fff;
+   border: 1px solid #fff;
+   transition: all .3s ease-out;
+}
+.line {
+   display: block;
+   width: 100%;
+   height: 1px;
+   background-color: #ccc;
+   margin: 20px 0 20px 0;
+}
+.todo-container {
+   width: 100%;
+}
+.wrapper-items {
+   width: 100%;
+   padding: 0;
+   margin: 0;
+}
+.item {
+   padding: 0;
+   margin: 8px 0 8px 0;
+   list-style-type: none;
+   display: flex;
+   width: 100%;
+}
+.item__input {
+   width: 100%;
+   outline: none;
+   border: none;
+   border-radius: 30px;
+   background-color: #ccc;
+   font-size: 20px;
+   font-weight: 400;
+   color: #333;
+   padding: 10px 30px 10px 30px;
+   border: 1px solid #ccc;
+   transition: all .3s ease-out;
+}
+.wrapper-itemButton {
+   display: flex;
+}
+.item__button{
+   color: #fff;
+   padding: 10px 30px 10px 30px;
+   font-size: 20px;
+   font-weight: 400;
+   outline: none;
+   border: none;
+   border-radius: 30px;
+   cursor: pointer;
+   margin: 0 5px 0 5px;
+   transition: all .3s ease-out;
+}
+.item__button:hover {
+   background-color: #333;
+   color: #fff;
+   transition: all .3s ease-out;
+}
+.edit-color {
+   background-color: rgb(34, 163, 34);
+   border: 1px solid rgb(34, 163, 34);
+}
+.edit-color:hover{
+   border: 1px solid rgb(34, 163, 34);
+}
+.remove-color {
+   background-color: rgb(235, 47, 47);
+   border: 1px solid rgb(235, 47, 47);
+}
+.remove-color:hover {
+   border: 1px solid rgb(235, 47, 47);
+}
