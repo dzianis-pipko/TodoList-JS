@@ -6,6 +6,9 @@ let todoList = [];
 
 let maxId = 0;
 
+let iconDone = '<i class="fas fa-check"></i>';
+let iconCircle = '<i class="far fa-circle"></i>';
+
 if (localStorage.getItem('todo')) {
    todoList = JSON.parse(localStorage.getItem('todo'));
    maxId = todoList.length;
@@ -21,6 +24,7 @@ addButton.addEventListener('click', function () {
       important: false,
       id: maxId++,
       inputClass: 'item__input',
+      buttonDone: iconCircle,
    })
 
    todoMassages();
@@ -33,11 +37,13 @@ function todoMassages() {
    todoList.forEach((item) => {
       displayTodoBody += `
       <li class="item" id="itemID__${item.id}">
+         <div class="wrapper-itemButton">
+            <button onclick="done(${item.id})" class="item__button done-color" id="button-done__${item.id}">${item.buttonDone}</button>
+         </div>
          <input done="${item.done}" change_state="0" class="${item.inputClass}" id="${item.id}" type="text" value="${item.todo}" disabled="true">
          <div class="wrapper-itemButton">
-            <button onclick="edit(${item.id})" class="item__button edit-color" id="button-edit__${item.id}">Edit</button>
-            <button onclick="done(${item.id})" class="item__button done-color" id="button-done__${item.id}">!</button>
-            <button onclick="remove(${item.id})" class="item__button remove-color" id="button-remove__${item.id}">Remove</button>
+            <button onclick="edit(${item.id})" class="item__button edit-color" id="button-edit__${item.id}"><i class="fas fa-edit"></i></button>
+            <button onclick="remove(${item.id})" class="item__button remove-color" id="button-remove__${item.id}"><i class="far fa-trash-alt"></i></button>
          </div>
       </li>
       `;
@@ -53,12 +59,12 @@ function edit(id) {
    if (inputResp.getAttribute('change_state') === '0') {
       inputResp.removeAttribute("disabled");
       inputResp.setAttribute('change_state', '1')
+      button.innerHTML = '<i class="fas fa-save"></i>';
 
-      button.innerText = 'save';
    } else {
       inputResp.setAttribute("disabled", true);
       inputResp.setAttribute('change_state', '0')
-      button.innerText = 'Edit';
+      button.innerHTML = '<i class="fas fa-edit"></i>';
 
       let elementIndex = todoList.findIndex(item => item.id === +id);
 
@@ -84,27 +90,27 @@ function remove(id) {
 
    localStorage.setItem('todo', JSON.stringify(todoList));
 }
-let inputResp;
+
 function done(id) {
-   inputResp = document.getElementById(`${id}`);
+   let inputResp = document.getElementById(`${id}`);
    let button = document.querySelector(`#button-done__${id}`);
 
    let elemIndex = todoList.findIndex(item => item.id === id);
    let element = todoList[elemIndex];
    element.done = !element.done;
    if (element.done === true) {
-      inputResp.setAttribute('done', true)
+      inputResp.setAttribute('done', true);
    } else {
       inputResp.setAttribute('done', false)
    }
 
    if (inputResp.getAttribute('done') === 'true') {
       element.inputClass += ' input__done';
-      button.innerHTML = 'Done';
+      element.buttonDone = iconDone;
       todoMassages();
    } else {
       element.inputClass = 'item__input';
-      button.innerHTML = '!';
+      element.buttonDone = iconCircle;
       todoMassages();
    }
 
@@ -117,28 +123,3 @@ function done(id) {
    console.log('inputResp', inputResp.getAttribute('done'));
 
 }
-
-
-
-
-
-// ===================================================
-
-// if (inputResp.getAttribute('done') === '0') {
-   //    inputResp.setAttribute('done', '1');
-   //    inputResp.classList.add('input__done');
-   //    button.innerText = 'Done';
-   //    // element.done = true;
-   // } else {
-   //    inputResp.setAttribute('done', '0');
-   //    inputResp.classList.remove('input__done');
-   //    button.innerText = '!';
-   //    // element.done = false;
-   // }
-
-
-// lists.addEventListener('click', function (e) {
-//    inputTarget = e.target;
-//    let idInputTarget = e.target.getAttribute('id');
-//    doneFunction(idInputTarget);
-// })
