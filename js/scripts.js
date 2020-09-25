@@ -6,8 +6,6 @@ let todoList = [];
 
 let maxId = 0;
 
-let inputTarget;
-
 if (localStorage.getItem('todo')) {
    todoList = JSON.parse(localStorage.getItem('todo'));
    maxId = todoList.length;
@@ -19,9 +17,10 @@ addButton.addEventListener('click', function () {
 
    todoList.push({
       todo: inputText.value,
-      done: true,
+      done: false,
       important: false,
-      id: maxId++
+      id: maxId++,
+      inputClass: 'item__input',
    })
 
    todoMassages();
@@ -34,7 +33,7 @@ function todoMassages() {
    todoList.forEach((item) => {
       displayTodoBody += `
       <li class="item" id="itemID__${item.id}">
-         <input done="0" change_state="0" class="item__input inputResponse" id="${item.id}" type="text" value="${item.todo}" disabled="true">
+         <input done="${item.done}" change_state="0" class="${item.inputClass}" id="${item.id}" type="text" value="${item.todo}" disabled="true">
          <div class="wrapper-itemButton">
             <button onclick="edit(${item.id})" class="item__button edit-color" id="button-edit__${item.id}">Edit</button>
             <button onclick="done(${item.id})" class="item__button done-color" id="button-done__${item.id}">!</button>
@@ -42,11 +41,10 @@ function todoMassages() {
          </div>
       </li>
       `;
+
       lists.innerHTML = displayTodoBody;
    })
 }
-// item__
-// #item__
 
 function edit(id) {
    let inputResp = document.getElementById(`${id}`);
@@ -86,59 +84,61 @@ function remove(id) {
 
    localStorage.setItem('todo', JSON.stringify(todoList));
 }
-
+let inputResp;
 function done(id) {
-   let inputResp = document.getElementById(`${id}`);
+   inputResp = document.getElementById(`${id}`);
    let button = document.querySelector(`#button-done__${id}`);
 
-   let elemIndex = todoList.findIndex(item => item.id === +id);
+   let elemIndex = todoList.findIndex(item => item.id === id);
    let element = todoList[elemIndex];
-
-   if (inputResp.getAttribute('done') === '0' && element.done === false) {
-      inputResp.setAttribute('done', '1');
-      inputResp.classList.add('input__done');
-      button.innerText = 'Done';
-      element.done = true;
-      console.log(inputResp);
+   element.done = !element.done;
+   if (element.done === true) {
+      inputResp.setAttribute('done', true)
    } else {
-      inputResp.setAttribute('done', '0');
-      inputResp.classList.remove('input__done');
-      button.innerText = '!';
-      element.done = false;
-      console.log(inputResp);
+      inputResp.setAttribute('done', false)
+   }
+
+   if (inputResp.getAttribute('done') === 'true') {
+      element.inputClass += ' input__done';
+      button.innerHTML = 'Done';
+      todoMassages();
+   } else {
+      element.inputClass = 'item__input';
+      button.innerHTML = '!';
+      todoMassages();
    }
 
    localStorage.setItem('todo', JSON.stringify(todoList));
+
    console.log('element', element);
+   console.log('ID', id);
    console.log('todoList', todoList);
+   console.log('inputResp', inputResp);
+   console.log('inputResp', inputResp.getAttribute('done'));
+
 }
+
+
+
+
+
+// ===================================================
+
+// if (inputResp.getAttribute('done') === '0') {
+   //    inputResp.setAttribute('done', '1');
+   //    inputResp.classList.add('input__done');
+   //    button.innerText = 'Done';
+   //    // element.done = true;
+   // } else {
+   //    inputResp.setAttribute('done', '0');
+   //    inputResp.classList.remove('input__done');
+   //    button.innerText = '!';
+   //    // element.done = false;
+   // }
+
 
 // lists.addEventListener('click', function (e) {
 //    inputTarget = e.target;
 //    let idInputTarget = e.target.getAttribute('id');
 //    doneFunction(idInputTarget);
 // })
-
-// function doneFunction(id) {
-//    let elemIndex = todoList.findIndex(item => item.id === +id);
-
-//    let element = todoList[elemIndex];
-//    if (element.done) {
-//       element.done = false;
-//       inputTarget.classList.remove('input__done');
-//    } else {
-//       element.done = true;
-//       inputTarget.classList.add('input__done');
-//    }
-
-//    localStorage.setItem('todo', JSON.stringify(todoList));
-// }
-
-
-
-
-// if () {
-//    inputTarget.classList.add('input__done');
-// } else {
-//    inputTarget.classList.remove('input__done');
-// }
