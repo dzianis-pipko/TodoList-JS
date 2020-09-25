@@ -109,6 +109,9 @@ body {
    border: 1px solid #ccc;
    transition: all .3s ease-out;
 }
+.input__done {
+   text-decoration: line-through;
+}
 .wrapper-itemButton {
    display: flex;
 }
@@ -142,4 +145,11 @@ body {
 }
 .remove-color:hover {
    border: 1px solid rgb(235, 47, 47);
+}
+.done-color {
+   background-color: rgb(44, 135, 221);
+   border: 1px solid rgb(44, 135, 221);
+}
+.done-color:hover {
+   border: 1px solid rgb(44, 135, 221);
 }
