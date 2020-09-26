@@ -12,6 +12,10 @@ let iconCircle = '<i class="far fa-circle"></i>';
 if (localStorage.getItem('todo')) {
    todoList = JSON.parse(localStorage.getItem('todo'));
    maxId = todoList.length;
+
+   activeIndicator();
+   doneIndicator();
+
    todoMassages();
 }
 
@@ -26,6 +30,7 @@ addButton.addEventListener('click', function () {
       inputClass: 'item__input',
       buttonDone: iconCircle,
    })
+   activeIndicator();
 
    todoMassages();
    localStorage.setItem('todo', JSON.stringify(todoList));
@@ -40,9 +45,10 @@ function todoMassages() {
          <div class="wrapper-itemButton">
             <button onclick="done(${item.id})" class="item__button done-color" id="button-done__${item.id}">${item.buttonDone}</button>
          </div>
-         <input done="${item.done}" change_state="0" class="${item.inputClass}" id="${item.id}" type="text" value="${item.todo}" disabled="true">
+         <input important="${item.important}" done="${item.done}" change_state="0" class="${item.inputClass}" id="${item.id}" type="text" value="${item.todo}" disabled="true">
          <div class="wrapper-itemButton">
             <button onclick="edit(${item.id})" class="item__button edit-color" id="button-edit__${item.id}"><i class="fas fa-edit"></i></button>
+            <button onclick="important(${item.id})" class="item__button important-color" id="button-important__${item.id}"><i class="fas fa-exclamation"></i></button>
             <button onclick="remove(${item.id})" class="item__button remove-color" id="button-remove__${item.id}"><i class="far fa-trash-alt"></i></button>
          </div>
       </li>
@@ -59,11 +65,13 @@ function edit(id) {
    if (inputResp.getAttribute('change_state') === '0') {
       inputResp.removeAttribute("disabled");
       inputResp.setAttribute('change_state', '1')
+      inputResp.classList.add('input__edit');
       button.innerHTML = '<i class="fas fa-save"></i>';
 
    } else {
       inputResp.setAttribute("disabled", true);
       inputResp.setAttribute('change_state', '0')
+      inputResp.classList.remove('input__edit');
       button.innerHTML = '<i class="fas fa-edit"></i>';
 
       let elementIndex = todoList.findIndex(item => item.id === +id);
@@ -86,7 +94,8 @@ function remove(id) {
    ];
 
    todoList = newArray;
-   console.log(todoList);
+   activeIndicator();
+   doneIndicator();
 
    localStorage.setItem('todo', JSON.stringify(todoList));
 }
@@ -98,6 +107,10 @@ function done(id) {
    let elemIndex = todoList.findIndex(item => item.id === id);
    let element = todoList[elemIndex];
    element.done = !element.done;
+
+   activeIndicator();
+   doneIndicator();
+
    if (element.done === true) {
       inputResp.setAttribute('done', true);
    } else {
@@ -115,11 +128,40 @@ function done(id) {
    }
 
    localStorage.setItem('todo', JSON.stringify(todoList));
+}
+function important(id) {
+   let inputResp = document.getElementById(`${id}`);
 
-   console.log('element', element);
-   console.log('ID', id);
-   console.log('todoList', todoList);
-   console.log('inputResp', inputResp);
-   console.log('inputResp', inputResp.getAttribute('done'));
+   let elemIndex = todoList.findIndex(item => item.id === id)
+   let element = todoList[elemIndex];
+   element.important = !element.important
+   if (element.important === true) {
+      inputResp.setAttribute('important', true)
+   } else {
+      inputResp.setAttribute('important', false)
+   }
 
+   if (inputResp.getAttribute('important') === 'true') {
+      element.inputClass += ' input__important';
+      todoMassages();
+   } else {
+      element.inputClass = 'item__input';
+      todoMassages();
+   }
+   localStorage.setItem('todo', JSON.stringify(todoList));
+}
+
+function activeIndicator() {
+   let ectiveTodo = document.querySelector('.header__ectiveTodo');
+
+   let countFilter = todoList.filter(item => item.done === false);
+   let count = countFilter.length;
+   ectiveTodo.innerText = count;
+}
+function doneIndicator() {
+   let doneTodo = document.querySelector('.header__doneTodo');
+
+   let countFilter2 = todoList.filter(item => item.done === true);
+   let count2 = countFilter2.length;
+   doneTodo.innerText = count2;
 }

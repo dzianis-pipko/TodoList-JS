@@ -6,13 +6,29 @@
 }
 body {
    height: 100%;
-   background-color: #333;
-   
+   background-color: #333; 
+   position: relative; 
+   padding: 80px 0 80px 0;
+}
+.header {
+   display: block;
+   position: fixed;
+   top: 0;
+   left: 0;
+   right: 0;
+   padding: 5px 40px 5px 40px;
+   background-color: none;
+}
+.header__indicator {
+   color: #ccc;
+   font-size: 16px;
+   font-weight: 300;
+}
+.header__ectiveTodo, .header__doneTodo {
+   font-weight: 700;
 }
 
 .todo-wrapper {
-   margin-top: 80px;
-   margin-bottom: 80px;
    width: 100%;
    padding: 0 40px 0 40px;
    display: flex;
@@ -100,7 +116,7 @@ body {
 .item__input {
    width: 100%;
    outline: none;
-   border: none;
+   border: 1px solid #ccc;
    border-radius: 30px;
    background-color: #ccc;
    font-size: 20px;
@@ -112,6 +128,17 @@ body {
 }
 .input__done {
    text-decoration: line-through;
+}
+.input__edit {
+   background-color: #333;
+   border: none;
+   border-bottom: 1px solid #ccc;
+   border-radius: 5px;
+   color: #fff;
+}
+.input__important {
+   color: rgb(44, 135, 221);
+   font-weight: 700;
 }
 .wrapper-itemButton {
    display: flex;
@@ -137,12 +164,12 @@ body {
    color: #fff;
    transition: all .3s ease-out;
 }
-.edit-color {
-   background-color: rgb(34, 163, 34);
-   border: 1px solid rgb(34, 163, 34);
+.important-color {
+   background-color: rgb(44, 135, 221);
+   border: 1px solid rgb(44, 135, 221);
 }
-.edit-color:hover{
-   border: 1px solid rgb(34, 163, 34);
+.important-color:hover{
+   border: 1px solid rgb(44, 135, 221);
 }
 .remove-color {
    background-color: rgb(235, 47, 47);
@@ -152,9 +179,17 @@ body {
    border: 1px solid rgb(235, 47, 47);
 }
 .done-color {
-   background-color: rgb(44, 135, 221);
-   border: 1px solid rgb(44, 135, 221);
+   background-color: rgb(34, 163, 34);
+   border: 1px solid rgb(34, 163, 34);
 }
 .done-color:hover {
-   border: 1px solid rgb(44, 135, 221);
+   border: 1px solid rgb(34, 163, 34);
 }
+.edit-color{
+   background-color: rgb(32, 158, 216);
+   border: 1px solid rgb(32, 158, 216);
+}
+.edit-color:hover{
+   border: 1px solid rgb(32, 158, 216);
+}
+
