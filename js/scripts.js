@@ -2,41 +2,44 @@ let inputText = document.querySelector('.todo-add__input');
 let addButton = document.querySelector('.todo-add__button');
 let lists = document.querySelector('.wrapper-items');
 
-let todoList = [];
-
-let maxId = 0;
-
-let iconDone = '<i class="fas fa-check"></i>';
-let iconCircle = '<i class="far fa-circle"></i>';
+let state = {
+   todoList: [],
+   maxId: 0,
+   term: '',
+   iconDone: '<i class="fas fa-check"></i>',
+   iconCircle: '<i class="far fa-circle"></i>',
+   searchTodoList: []
+}
 
 if (localStorage.getItem('todo')) {
-   todoList = JSON.parse(localStorage.getItem('todo'));
-   maxId = todoList.length;
+   state.todoList = JSON.parse(localStorage.getItem('todo'));
+   state.maxId = state.todoList.length;
    activeIndicator();
    doneIndicator();
-   todoMassages();
+   todoMassages(state.todoList);
 }
 
 addButton.addEventListener('click', function () {
    if (!inputText.value) return;
 
-   todoList.push({
+   state.todoList.push({
       todo: inputText.value,
       done: false,
       important: false,
-      id: maxId++,
+      id: state.maxId++,
       inputClass: 'item__input',
-      buttonDone: iconCircle,
+      buttonDone: state.iconCircle,
    })
    activeIndicator();
-   todoMassages();
+   todoMassages(state.todoList);
    localStorageUpdate()
    inputText.value = '';
 })
 
-function todoMassages() {
+function todoMassages([...todos]) {
    let displayTodoBody = '';
-   todoList.forEach((item) => {
+   console.log('todos', todos);
+   todos.forEach((item) => {
       displayTodoBody += `
       <li class="item" id="itemID__${item.id}">
          <div class="wrapper-itemButton">
@@ -70,9 +73,9 @@ function edit(id) {
       inputResp.classList.remove('input__edit');
       button.innerHTML = '<i class="fas fa-edit"></i>';
 
-      let elementIndex = todoList.findIndex(item => item.id === +id);
+      let elementIndex = state.todoList.findIndex(item => item.id === +id);
 
-      let element = todoList[elementIndex];
+      let element = state.todoList[elementIndex];
       element.todo = inputResp.value;
 
       localStorageUpdate()
@@ -83,13 +86,13 @@ function remove(id) {
    let workLi = document.querySelector(`#itemID__${id}`);
    lists.removeChild(workLi);
 
-   let elementIndex = todoList.findIndex(item => item.id === +id);
+   let elementIndex = state.todoList.findIndex(item => item.id === +id);
    let newArray = [
-      ...todoList.slice(0, elementIndex),
-      ...todoList.slice(elementIndex + 1),
+      ...state.todoList.slice(0, elementIndex),
+      ...state.todoList.slice(elementIndex + 1),
    ];
 
-   todoList = newArray;
+   state.todoList = newArray;
    activeIndicator();
    doneIndicator();
    localStorageUpdate()
@@ -98,8 +101,8 @@ function remove(id) {
 function done(id) {
    let inputResp = document.getElementById(`${id}`);
 
-   let elemIndex = todoList.findIndex(item => item.id === id);
-   let element = todoList[elemIndex];
+   let elemIndex = state.todoList.findIndex(item => item.id === id);
+   let element = state.todoList[elemIndex];
    element.done = !element.done;
 
    activeIndicator();
@@ -113,20 +116,20 @@ function done(id) {
 
    if (inputResp.getAttribute('done') === 'true') {
       element.inputClass += ' input__done';
-      element.buttonDone = iconDone;
-      todoMassages();
+      element.buttonDone = state.iconDone;
+      todoMassages(state.todoList);
    } else {
       element.inputClass = 'item__input';
-      element.buttonDone = iconCircle;
-      todoMassages();
+      element.buttonDone = state.iconCircle;
+      todoMassages(state.todoList);
    }
    localStorageUpdate()
 }
 function important(id) {
    let inputResp = document.getElementById(`${id}`);
 
-   let elemIndex = todoList.findIndex(item => item.id === id)
-   let element = todoList[elemIndex];
+   let elemIndex = state.todoList.findIndex(item => item.id === id)
+   let element = state.todoList[elemIndex];
    element.important = !element.important
    if (element.important === true) {
       inputResp.setAttribute('important', true)
@@ -136,10 +139,10 @@ function important(id) {
 
    if (inputResp.getAttribute('important') === 'true') {
       element.inputClass += ' input__important';
-      todoMassages();
+      todoMassages(state.todoList);
    } else {
       element.inputClass = 'item__input';
-      todoMassages();
+      todoMassages(state.todoList);
    }
    localStorageUpdate()
 }
@@ -147,17 +150,46 @@ function important(id) {
 function activeIndicator() {
    let ectiveTodo = document.querySelector('.header__ectiveTodo');
 
-   let countFilter = todoList.filter(item => item.done === false);
+   let countFilter = state.todoList.filter(item => item.done === false);
    let count = countFilter.length;
    ectiveTodo.innerText = count;
 }
 function doneIndicator() {
    let doneTodo = document.querySelector('.header__doneTodo');
 
-   let countFilter = todoList.filter(item => item.done === true);
+   let countFilter = state.todoList.filter(item => item.done === true);
    let count = countFilter.length;
    doneTodo.innerText = count;
 }
 function localStorageUpdate() {
-   localStorage.setItem('todo', JSON.stringify(todoList));
+   localStorage.setItem('todo', JSON.stringify(state.todoList));
+}
+
+function search() {
+   let searchInp = document.querySelector('.searchInput').value;
+   state.term = searchInp;
+
+   if (state.term === '') {
+      renderSearchItems()
+   } else {
+      renderSearchItems()
+   }
+}
+
+function searcFilter(items, term) {
+   if (items.length === 0) {
+      return items;
+   }
+
+   return items.filter(item => {
+      return item.todo.toLowerCase().indexOf(term.toLowerCase()) > -1;
+   })
+}
+
+function renderSearchItems() {
+   state.searchTodoList = state.todoList
+   let { searchTodoList, term } = state;
+   let filterItems = searcFilter(searchTodoList, term)
+
+   todoMassages(filterItems);
 }

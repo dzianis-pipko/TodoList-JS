@@ -16,8 +16,10 @@ body {
    top: 0;
    left: 0;
    right: 0;
-   padding: 5px 40px 5px 40px;
+   padding: 10px 40px 10px 40px;
    background-color: none;
+   display: flex;
+   justify-content: space-between;
 }
 .header__indicator {
    color: #ccc;
@@ -27,7 +29,40 @@ body {
 .header__ectiveTodo, .header__doneTodo {
    font-weight: 700;
 }
+.header__search {
+   display: flex;
+   align-items: center;
+}
 
+.searchInput{
+   width: 80px;
+   height: 30px;
+   padding: 5px 15px 5px 15px;
+   outline: none;
+   border: none;
+   border-radius: 30px;
+   background-color: #fff;
+   font-size: 16px;
+   font-weight: 300;
+   color: #333;
+   border: 0px solid #fff;
+   transition: all .3s ease-out;
+   cursor: pointer;
+}
+.searchInput:focus {
+   color: #fff;
+   background-color: #333;
+   border: none;
+   border-radius: 5px;
+   border-bottom: 1px solid #fff;
+   transition: all .3s ease-out;
+   width: 200px;
+}
+.fas.fa-search{
+   margin-right: 5px;
+   font-size: 20px;
+   color: #fff;
+}
 .todo-wrapper {
    width: 100%;
    padding: 0 40px 0 40px;
