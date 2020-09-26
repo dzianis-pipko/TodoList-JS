@@ -12,10 +12,8 @@ let iconCircle = '<i class="far fa-circle"></i>';
 if (localStorage.getItem('todo')) {
    todoList = JSON.parse(localStorage.getItem('todo'));
    maxId = todoList.length;
-
    activeIndicator();
    doneIndicator();
-
    todoMassages();
 }
 
@@ -31,9 +29,8 @@ addButton.addEventListener('click', function () {
       buttonDone: iconCircle,
    })
    activeIndicator();
-
    todoMassages();
-   localStorage.setItem('todo', JSON.stringify(todoList));
+   localStorageUpdate()
    inputText.value = '';
 })
 
@@ -53,7 +50,6 @@ function todoMassages() {
          </div>
       </li>
       `;
-
       lists.innerHTML = displayTodoBody;
    })
 }
@@ -79,7 +75,7 @@ function edit(id) {
       let element = todoList[elementIndex];
       element.todo = inputResp.value;
 
-      localStorage.setItem('todo', JSON.stringify(todoList));
+      localStorageUpdate()
    }
 }
 
@@ -96,13 +92,11 @@ function remove(id) {
    todoList = newArray;
    activeIndicator();
    doneIndicator();
-
-   localStorage.setItem('todo', JSON.stringify(todoList));
+   localStorageUpdate()
 }
 
 function done(id) {
    let inputResp = document.getElementById(`${id}`);
-   let button = document.querySelector(`#button-done__${id}`);
 
    let elemIndex = todoList.findIndex(item => item.id === id);
    let element = todoList[elemIndex];
@@ -126,8 +120,7 @@ function done(id) {
       element.buttonDone = iconCircle;
       todoMassages();
    }
-
-   localStorage.setItem('todo', JSON.stringify(todoList));
+   localStorageUpdate()
 }
 function important(id) {
    let inputResp = document.getElementById(`${id}`);
@@ -148,7 +141,7 @@ function important(id) {
       element.inputClass = 'item__input';
       todoMassages();
    }
-   localStorage.setItem('todo', JSON.stringify(todoList));
+   localStorageUpdate()
 }
 
 function activeIndicator() {
@@ -161,7 +154,10 @@ function activeIndicator() {
 function doneIndicator() {
    let doneTodo = document.querySelector('.header__doneTodo');
 
-   let countFilter2 = todoList.filter(item => item.done === true);
-   let count2 = countFilter2.length;
-   doneTodo.innerText = count2;
+   let countFilter = todoList.filter(item => item.done === true);
+   let count = countFilter.length;
+   doneTodo.innerText = count;
+}
+function localStorageUpdate() {
+   localStorage.setItem('todo', JSON.stringify(todoList));
 }
