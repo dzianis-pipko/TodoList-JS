@@ -1,6 +1,7 @@
 let inputText = document.querySelector('.todo-add__input');
 let addButton = document.querySelector('.todo-add__button');
 let lists = document.querySelector('.wrapper-items');
+let nav = document.querySelector('.header__filter');
 
 let state = {
    todoList: [],
@@ -8,7 +9,11 @@ let state = {
    term: '',
    iconDone: '<i class="fas fa-check"></i>',
    iconCircle: '<i class="far fa-circle"></i>',
-   searchTodoList: []
+   iconEdit: '<i class="fas fa-edit"></i>',
+   iconSave: '<i class="fas fa-save"></i>',
+   searchTodoList: [],
+   filter: 'all',
+   filterTodoList: []
 }
 
 if (localStorage.getItem('todo')) {
@@ -19,11 +24,13 @@ if (localStorage.getItem('todo')) {
    todoMassages(state.todoList);
 }
 
-addButton.addEventListener('click', function () {
+addButton.addEventListener('click', function (e) {
+   e.preventDefault();
    if (!inputText.value) return;
 
    state.todoList.push({
       todo: inputText.value,
+      change: 0,
       done: false,
       important: false,
       id: state.maxId++,
@@ -38,23 +45,26 @@ addButton.addEventListener('click', function () {
 
 function todoMassages([...todos]) {
    let displayTodoBody = '';
-   console.log('todos', todos);
-   todos.forEach((item) => {
-      displayTodoBody += `
-      <li class="item" id="itemID__${item.id}">
-         <div class="wrapper-itemButton">
-            <button onclick="done(${item.id})" class="item__button done-color" id="button-done__${item.id}">${item.buttonDone}</button>
-         </div>
-         <input important="${item.important}" done="${item.done}" change_state="0" class="${item.inputClass}" id="${item.id}" type="text" value="${item.todo}" disabled="true">
-         <div class="wrapper-itemButton">
-            <button onclick="edit(${item.id})" class="item__button edit-color" id="button-edit__${item.id}"><i class="fas fa-edit"></i></button>
-            <button onclick="important(${item.id})" class="item__button important-color" id="button-important__${item.id}"><i class="fas fa-exclamation"></i></button>
-            <button onclick="remove(${item.id})" class="item__button remove-color" id="button-remove__${item.id}"><i class="far fa-trash-alt"></i></button>
-         </div>
-      </li>
-      `;
-      lists.innerHTML = displayTodoBody;
-   })
+   if (todos.length != 0) {
+      todos.forEach((item) => {
+         displayTodoBody += `
+         <li class="item" id="itemID__${item.id}">
+            <div class="wrapper-itemButton">
+               <button onclick="done(${item.id})" class="item__button done-color" id="button-done__${item.id}">${item.buttonDone}</button>
+            </div>
+            <input important="${item.important}" done="${item.done}" change_state="${item.change}" class="${item.inputClass}" id="${item.id}" type="text" value="${item.todo}" disabled="true">
+            <div class="wrapper-itemButton">
+               <button onclick="edit(${item.id})" class="item__button edit-color" id="button-edit__${item.id}">${state.iconEdit}</button>
+               <button onclick="important(${item.id})" class="item__button important-color" id="button-important__${item.id}"><i class="fas fa-exclamation"></i></button>
+               <button onclick="remove(${item.id})" class="item__button remove-color" id="button-remove__${item.id}"><i class="far fa-trash-alt"></i></button>
+            </div>
+         </li>
+         `;
+         lists.innerHTML = displayTodoBody;
+      })
+   } else {
+      lists.innerHTML = null;
+   }
 }
 
 function edit(id) {
@@ -65,13 +75,13 @@ function edit(id) {
       inputResp.removeAttribute("disabled");
       inputResp.setAttribute('change_state', '1')
       inputResp.classList.add('input__edit');
-      button.innerHTML = '<i class="fas fa-save"></i>';
+      button.innerHTML = state.iconSave;
 
    } else {
       inputResp.setAttribute("disabled", true);
       inputResp.setAttribute('change_state', '0')
       inputResp.classList.remove('input__edit');
-      button.innerHTML = '<i class="fas fa-edit"></i>';
+      button.innerHTML = state.iconEdit;
 
       let elementIndex = state.todoList.findIndex(item => item.id === +id);
 
@@ -117,14 +127,19 @@ function done(id) {
    if (inputResp.getAttribute('done') === 'true') {
       element.inputClass += ' input__done';
       element.buttonDone = state.iconDone;
+
       todoMassages(state.todoList);
+      renderFilterItems();
    } else {
       element.inputClass = 'item__input';
       element.buttonDone = state.iconCircle;
+
       todoMassages(state.todoList);
+      renderFilterItems();
    }
    localStorageUpdate()
 }
+
 function important(id) {
    let inputResp = document.getElementById(`${id}`);
 
@@ -140,9 +155,11 @@ function important(id) {
    if (inputResp.getAttribute('important') === 'true') {
       element.inputClass += ' input__important';
       todoMassages(state.todoList);
+      renderFilterItems();
    } else {
       element.inputClass = 'item__input';
       todoMassages(state.todoList);
+      renderFilterItems();
    }
    localStorageUpdate()
 }
@@ -189,7 +206,66 @@ function searcFilter(items, term) {
 function renderSearchItems() {
    state.searchTodoList = state.todoList
    let { searchTodoList, term } = state;
-   let filterItems = searcFilter(searchTodoList, term)
+   let filterItems = searcFilter(searchTodoList, term);
 
    todoMassages(filterItems);
+}
+
+function filterTodo(items, filter) {
+   switch (filter) {
+      case 'all':
+         return items;
+      case 'active':
+         return items.filter(item => !item.done);
+      case 'done':
+         return items.filter(item => item.done);
+      default:
+         return items;
+   }
+}
+
+function renderFilterItems() {
+   state.filterTodoList = state.todoList;
+   let { filterTodoList, filter } = state;
+   let filterItems = filterTodo(filterTodoList, filter);
+
+   todoMassages(filterItems);
+}
+
+nav.addEventListener('click', function (e) {
+   let action = e.target.getAttribute('action');
+
+   switch (action) {
+      case 'all':
+         state.filter = action;
+         renderFilterItems();
+         break;
+      case 'active':
+         state.filter = action;
+         renderFilterItems();
+         break;
+      case 'done':
+         state.filter = action;
+         renderFilterItems();
+         break;
+      default:
+         alert("Что-то пошло не так!");
+   }
+})
+
+
+let buttonns = document.querySelectorAll('.wrapperHeaderFilter button');
+let ind = document.querySelector('.naw-indicator');
+
+buttonns.forEach(item => {
+   item.addEventListener('click', (e) => {
+      let activeClassButton = document.querySelector('#activeFilterId');
+      activeClassButton.classList.remove('activeFilter');
+      moveInd(e.target);
+   })
+})
+
+function moveInd(elem) {
+   ind.style.width = `${elem.offsetWidth}px`;
+   ind.style.left = `${elem.offsetLeft}px`;
 }

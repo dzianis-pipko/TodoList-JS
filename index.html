@@ -13,9 +13,16 @@
 
 <body>
    <header class="header">
-      <p class="header__indicator">Еще <span class="header__ectiveTodo">0</span> дела, <span
-            class="header__doneTodo">0</span> готово</p>
-      <nav class="header__filter"></nav>
+      <p class="header__indicator"><span class="header__ectiveTodo">0</span> more to do, <span
+            class="header__doneTodo">0</span> done</p>
+      <nav class="header__filter">
+         <div class="wrapperHeaderFilter">
+            <button class="buttonFilter activeFilter" id="activeFilterId" action="all">All</button>
+            <button class="buttonFilter" action="active">Active</button>
+            <button class="buttonFilter" action="done">Done</button>
+         </div>
+         <div class="naw-indicator"></div>
+      </nav>
       <div class="header__search">
          <i class="fas fa-search"></i>
          <input type="text" oninput="search()" class="searchInput" placeholder="Search">
@@ -23,10 +30,10 @@
    </header>
    <div class="todo-wrapper">
       <h1 class="todo-title">TodoList</h1>
-      <div class="todo-add">
-         <input class="todo-add__input" type="text" placeholder="Введите дело...">
-         <button class="todo-add__button"><i class="fas fa-plus"></i></button>
-      </div>
+      <form action="" class="todo-add">
+         <input class="todo-add__input" type="text" placeholder="Enter the to do ...">
+         <button type="submit" class="todo-add__button"><i class="fas fa-plus"></i></button>
+      </form>
       <span class="line"></span>
       <div class="todo-container">
          <ul class="wrapper-items">

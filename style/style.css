@@ -17,9 +17,10 @@ body {
    left: 0;
    right: 0;
    padding: 10px 40px 10px 40px;
-   background-color: none;
+   background-color: #333;
    display: flex;
    justify-content: space-between;
+   align-items: center;
 }
 .header__indicator {
    color: #ccc;
@@ -32,6 +33,43 @@ body {
 .header__search {
    display: flex;
    align-items: center;
+}
+
+.header__filter {
+   position: relative;
+}
+.naw-indicator {
+   position: absolute;
+   bottom: 0;
+   left: 0;
+   height: 1px;
+   background-color: #fff;
+   transition: all .3s ease-out;
+}
+.buttonFilter {
+   color: #fff;
+   font-size: 16px;
+   font-weight: 400;
+   opacity: 0.5;
+   margin: 0;
+   padding: 5px 15px 5px 15px;
+   background-color: #333;
+   border: none;
+   border-radius: 0px;
+   outline: none;
+   cursor: pointer;
+   transition: all .3s ease-out;
+}
+.buttonFilter:hover {
+    transition: all .3s ease-out;
+    opacity: 1;
+}
+.buttonFilter:focus {
+   opacity: 1;
+}
+.activeFilter {
+   border-bottom: 1px solid #fff;
+   opacity: 1;
 }
 
 .searchInput{
@@ -49,11 +87,16 @@ body {
    transition: all .3s ease-out;
    cursor: pointer;
 }
+.searchInput:hover{
+   background-color: #333;
+   border: 1px solid #fff;
+   transition: all .3s ease-out;
+}
 .searchInput:focus {
    color: #fff;
    background-color: #333;
    border: none;
-   border-radius: 5px;
+   border-radius: 0px;
    border-bottom: 1px solid #fff;
    transition: all .3s ease-out;
    width: 200px;
